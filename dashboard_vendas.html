@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<title>Dashboard Maio 2026 — Limão Tênis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #151f16;
+  --surface:     #1e2d20;
+  --surface2:    #253728;
+  --surface3:    #314733;
+  --green-dark:  #314733;
+  --green-mid:   #4a6b4d;
+  --green-light: #75A075;
+  --green-pale:  #a8c9a8;
+  --white:       #ffffff;
+  --muted:       rgba(255,255,255,0.45);
+  --border:      rgba(117,160,117,0.18);
+  --red:         #d95f5f;
+  --yellow:      #e8b84a;
+  --text:        #f0f7f0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100vh;
+  padding: 16px 20px 12px;
+  gap: 12px;
+}
+
+/* ── HEADER ─────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-dark);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 16px 8px 12px;
+}
+
+.brand-logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.brand-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.brand-logo-text span {
+  color: var(--green-pale);
+}
+
+.brand-info h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.brand-info p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.live-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(117,160,117,0.4);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-light);
+  letter-spacing: 0.08em;
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--green-light);
+  border-radius: 50%;
+  animation: blink 1.4s infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity:1; }
+  50% { opacity:.25; }
+}
+
+.clock-block { text-align: right; }
+
+.clock {
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+  line-height: 1;
+}
+
+.clock-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  text-transform: capitalize;
+}
+
+/* ── KPI ROW ─────────────────────────────── */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 14px 14px 0 0;
+}
+
+.kpi.accent-green::after  { background: var(--green-light); }
+.kpi.accent-pale::after   { background: var(--green-pale); }
+.kpi.accent-red::after    { background: var(--red); }
+.kpi.accent-yellow::after { background: var(--yellow); }
+.kpi.accent-white::after  { background: rgba(255,255,255,0.5); }
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi.accent-green  .kpi-value { color: var(--green-light); }
+.kpi.accent-pale   .kpi-value { color: var(--green-pale); }
+.kpi.accent-red    .kpi-value { color: var(--red); }
+.kpi.accent-yellow .kpi-value { color: var(--yellow); }
+.kpi.accent-white  .kpi-value { color: var(--white); }
+
+.kpi-sub {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.kpi-progress {
+  margin-top: 8px;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.kpi-progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--green-dark), var(--green-light));
+  transition: width 1.5s ease;
+}
+
+/* ── MAIN GRID ───────────────────────────── */
+.main {
+  display: grid;
+  grid-template-columns: 2.1fr 1.2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  min-height: 0;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card.span2 { grid-row: span 2; }
+
+.card-header {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+.card-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--green-light);
+  margin-bottom: 2px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.chart-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* ── VENDEDORES ──────────────────────────── */
+.vend-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 6px;
+  flex: 1;
+}
+
+.vend-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.vend-rank {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800;
+  flex-shrink: 0;
+}
+
+.rank-1 { background: rgba(232,184,74,0.2);  color: var(--yellow); }
+.rank-2 { background: rgba(117,160,117,0.2); color: var(--green-light); }
+.rank-3 { background: rgba(168,201,168,0.15); color: var(--green-pale); }
+.rank-n { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+.vend-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  width: 68px;
+  flex-shrink: 0;
+}
+
+.vend-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vend-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--green-dark), var(--green-light));
+}
+
+.vend-qty {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-light);
+  min-width: 22px;
+  text-align: right;
+}
+
+.vend-fat {
+  font-size: 10px;
+  color: var(--muted);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* ── RENOVAÇÕES STATS ────────────────────── */
+.renov-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  justify-content: space-around;
+}
+
+.renov-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.renov-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.renov-name { font-size: 12px; color: var(--text); flex: 1; font-weight: 500; }
+.renov-bar-wrap {
+  flex: 1.5;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.renov-bar { height: 100%; border-radius: 3px; }
+.renov-count { font-size: 13px; font-weight: 800; min-width: 28px; text-align: right; }
+.renov-pct   { font-size: 10px; color: var(--muted); min-width: 36px; text-align: right; }
+
+/* ── A.A. CARDS ──────────────────────────── */
+.aa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  flex: 1;
+}
+
+.aa-mini {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.aa-mini-val {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.aa-mini-lbl {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+<header>
+  <div class="brand">
+    <div class="brand-logo">
+      <!-- Limão icon: racket + curve -->
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 28 C8 28, 12 18, 20 14 C26 11, 30 15, 28 21 C26 27, 20 30, 14 28 C10 26.5, 8 28, 8 28Z"
+              stroke="#75A075" stroke-width="2" fill="none"/>
+        <circle cx="10" cy="27" r="2.5" fill="#75A075"/>
+        <line x1="10" y1="27" x2="5" y2="32" stroke="#75A075" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="22" cy="12" r="3" fill="none" stroke="#a8c9a8" stroke-width="1.5"/>
+        <line x1="20.8" y1="13.2" x2="23.2" y2="10.8" stroke="#a8c9a8" stroke-width="1" stroke-linecap="round"/>
+        <line x1="20.8" y1="10.8" x2="23.2" y2="13.2" stroke="#a8c9a8" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-logo-text">Lim<span>ā</span>o</span>
+    </div>
+    <div class="brand-info">
+      <h1>Dashboard de Vendas &amp; Renovações</h1>
+      <p>Unidade Marginal · Maio 2026 · <span id="ultimaAtualiz">conectando…</span></p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-pill"><div class="live-dot"></div>AO VIVO</div>
+    <div class="clock-block">
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="clock-date" id="clockDate">--</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ KPI CARDS ═══════════════════════════════════════════════════════ -->
+<div class="kpis">
+
+  <div class="kpi accent-green">
+    <div class="kpi-label">Faturamento Vendas</div>
+    <div class="kpi-value" id="kpiFat">—</div>
+    <div class="kpi-sub">Meta: R$ 29.196 &nbsp;·&nbsp; <strong style="color:var(--green-light)" id="kpiPctMeta">carregando…</strong></div>
+    <div class="kpi-progress"><div class="kpi-progress-bar" id="progressFat" style="width:0%"></div></div>
+  </div>
+
+  <div class="kpi accent-pale">
+    <div class="kpi-label">Total de Vendas</div>
+    <div class="kpi-value" id="kpiQtd">—</div>
+    <div class="kpi-sub">Maio 2026 · mês em andamento</div>
+  </div>
+
+  <div class="kpi accent-white">
+    <div class="kpi-label">Ticket Médio</div>
+    <div class="kpi-value" id="kpiTicket">—</div>
+    <div class="kpi-sub">Valor médio mensal por venda</div>
+  </div>
+
+  <div class="kpi accent-green">
+    <div class="kpi-label">Taxa de Renovação</div>
+    <div class="kpi-value" id="kpiTaxaRenov">—</div>
+    <div class="kpi-sub" id="renovResumo">carregando…</div>
+    <div class="kpi-progress"><div class="kpi-progress-bar" id="progressRenov" style="width:0%"></div></div>
+  </div>
+
+  <div class="kpi accent-yellow">
+    <div class="kpi-label">Dias Restantes</div>
+    <div class="kpi-value" id="diasRestantes">—</div>
+    <div class="kpi-sub">Dia <span id="diaAtual">--</span> de 31 · Maio 2026</div>
+  </div>
+
+</div>
+
+<!-- ══ MAIN GRID ════════════════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- 1. EVOLUÇÃO DIÁRIA (esquerda, 2 linhas) -->
+  <div class="card span2">
+    <div class="card-header">
+      <div class="card-label">Evolução diária</div>
+      <div class="card-title">Faturamento Acumulado vs. Meta — Maio 2026</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chartEvolucao"></canvas>
+    </div>
+  </div>
+
+  <!-- 2. RENOVAÇÕES (centro, linha 1) -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-label">Renovações</div>
+      <div class="card-title">Situação dos Contratos</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chartRenovacoes"></canvas>
+    </div>
+  </div>
+
+  <!-- 3. A.A. (direita, linha 1) -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-label">Aulas Avaliativas · Maio</div>
+      <div class="card-title">Funil de Conversão</div>
+    </div>
+    <div class="aa-grid">
+      <div class="aa-mini">
+        <div class="aa-mini-val" style="color:var(--white)" id="aaTotal">—</div>
+        <div class="aa-mini-lbl">Agendadas</div>
+      </div>
+      <div class="aa-mini">
+        <div class="aa-mini-val" style="color:var(--green-light)" id="aaRealiz">—</div>
+        <div class="aa-mini-lbl">Realizadas</div>
+      </div>
+      <div class="aa-mini">
+        <div class="aa-mini-val" style="color:var(--green-pale)" id="aaPresenca">—</div>
+        <div class="aa-mini-lbl">Taxa Presença</div>
+      </div>
+      <div class="aa-mini">
+        <div class="aa-mini-val" style="color:var(--yellow)" id="aaConv">—</div>
+        <div class="aa-mini-lbl">Conversões</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. TOP VENDEDORES (centro, linha 2) -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-label">Ranking</div>
+      <div class="card-title">Top Vendedores — Maio</div>
+    </div>
+    <div class="vend-list" id="vendList"></div>
+  </div>
+
+  <!-- 5. RENOVAÇÕES DETALHE (direita, linha 2) -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-label">Renovações por consultor</div>
+      <div class="card-title">Desempenho da Equipe</div>
+    </div>
+    <div class="renov-stats" id="renovStats"></div>
+  </div>
+
+</div>
+
+<!-- ══ SCRIPTS ══════════════════════════════════════════════════════════ -->
+<script>
+// ─── ESTADO GLOBAL ────────────────────────────────────────────────────────
+let STATE = null;   // preenchido pelo fetch
+let chartEvolucao   = null;
+let chartRenovacoes = null;
+
+// ─── FETCH DE DADOS ───────────────────────────────────────────────────────
+async function fetchDados() {
+  try {
+    const res = await fetch('/api/data', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    STATE = await res.json();
+    renderDashboard(STATE);
+    document.getElementById('ultimaAtualiz').textContent =
+      'Atualizado: ' + (STATE.atualizado || '--');
+  } catch (e) {
+    console.warn('Erro ao buscar dados:', e);
+    document.getElementById('ultimaAtualiz').textContent =
+      'Aguardando servidor…';
+  }
+}
+
+// Atualiza a cada 60 s
+fetchDados();
+setInterval(fetchDados, 60_000);
+
+// ─── RENDER PRINCIPAL ────────────────────────────────────────────────────
+function renderDashboard(d) {
+  if (!d) return;
+  const v  = d.vendas       || {};
+  const r  = d.renovacoes   || {};
+  const a  = d.aa           || {};
+  const metaDia = d.meta_dia || 941.8;
+  const meta    = d.meta_total || 29196;
+
+  // KPIs
+  setText('kpiFat',       'R$ ' + fmt(v.total_fat));
+  setText('kpiPctMeta',   (v.pct_meta || 0).toFixed(1) + '% atingido');
+  setText('kpiQtd',       v.total_qtd || 0);
+  setText('kpiTicket',    'R$ ' + fmt(v.ticket_med));
+  setText('kpiTaxaRenov', (r.taxa_renov || 0).toFixed(1) + '%');
+  setWidth('progressFat',   Math.min(v.pct_meta || 0, 100));
+  setWidth('progressRenov', Math.min(r.taxa_renov || 0, 100));
+
+  const sits = r.situacoes || {};
+  setText('renovResumo',
+    `${sits.Renovado||0} renovados · ${sits.Baixa||0} baixas · ${sits.Pendente||0} pendentes`);
+
+  // A.A.
+  setText('aaTotal',    a.total      || 0);
+  setText('aaRealiz',   a.realizadas || 0);
+  setText('aaPresenca', (a.taxa_presenca || 0).toFixed(0) + '%');
+  setText('aaConv',     a.conversoes || 0);
+
+  // Gráfico evolução
+  const acum = v.acumulado || [];
+  const metaAcum = Array.from({length: 31}, (_, i) => Math.round(metaDia * (i+1)));
+  if (chartEvolucao) {
+    chartEvolucao.data.datasets[0].data = acum;
+    chartEvolucao.data.datasets[1].data = metaAcum;
+    chartEvolucao.options.scales.y.max  = Math.ceil(meta * 1.05 / 1000) * 1000;
+    chartEvolucao.update('none');
+  }
+
+  // Gráfico renovações
+  if (chartRenovacoes) {
+    const order = ['Renovado','Pendente','Baixa','Prorrogado'];
+    const colors = { Renovado:'#75A075', Pendente:'#e8b84a', Baixa:'#d95f5f', Prorrogado:'#a8c9a8' };
+    const labels = order.filter(k => sits[k] > 0);
+    chartRenovacoes.data.labels = labels;
+    chartRenovacoes.data.datasets[0].data            = labels.map(k => sits[k]);
+    chartRenovacoes.data.datasets[0].backgroundColor = labels.map(k => colors[k] + 'cc');
+    chartRenovacoes.data.datasets[0].borderColor     = labels.map(k => colors[k]);
+    const total = labels.reduce((s, k) => s + sits[k], 0);
+    chartRenovacoes._total = total;
+    chartRenovacoes.update('none');
+  }
+
+  // Vendedores
+  const vends = (v.vendedores || []).slice(0, 5);
+  renderVendedores(vends);
+
+  // Renovações por resp
+  renderRenovResp(r.por_resp || []);
+}
+
+function setText(id, val)  { const el = document.getElementById(id); if (el) el.textContent = val; }
+function setWidth(id, pct) { const el = document.getElementById(id); if (el) el.style.width = pct + '%'; }
+function fmt(n) { return (n || 0).toLocaleString('pt-BR'); }
+
+// ─── CONSTANTES INICIAIS (mostradas antes do 1º fetch) ────────────────────
+const META     = 29196;
+const META_DIA = META / 31;
+
+// ─── CLOCK ───────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('pt-BR', { hour12: false });
+  document.getElementById('clockDate').textContent =
+    now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const restantes = lastDay - now.getDate();
+  document.getElementById('diasRestantes').textContent = restantes + (restantes === 1 ? ' dia' : ' dias');
+  document.getElementById('diaAtual').textContent = now.getDate();
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ─── CHART DEFAULTS ──────────────────────────────────────────────────────
+Chart.defaults.color = 'rgba(255,255,255,0.45)';
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+
+const grid = () => ({ color: 'rgba(117,160,117,0.1)', drawBorder: false });
+
+// ─── 1. EVOLUÇÃO DIÁRIA ──────────────────────────────────────────────────
+(function() {
+  const ctx = document.getElementById('chartEvolucao').getContext('2d');
+  const dias = Array.from({ length: 31 }, (_, i) => i + 1);
+  const metaAcum = dias.map(d => Math.round(META_DIA * d));
+
+  const gradRealiz = ctx.createLinearGradient(0, 0, 0, 400);
+  gradRealiz.addColorStop(0, 'rgba(117,160,117,0.35)');
+  gradRealiz.addColorStop(1, 'rgba(117,160,117,0.02)');
+
+  chartEvolucao = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dias,
+      datasets: [
+        {
+          label: 'Realizado',
+          data: Array(31).fill(null),
+          borderColor: '#75A075',
+          backgroundColor: gradRealiz,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#75A075',
+          pointRadius: ctx => ctx.raw !== null ? 4 : 0,
+          pointHoverRadius: 7,
+          tension: 0.35,
+          fill: true,
+          spanGaps: false,
+        },
+        {
+          label: 'Meta',
+          data: metaAcum,
+          borderColor: 'rgba(255,255,255,0.25)',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      animation: { duration: 600 },
+      plugins: {
+        legend: {
+          position: 'top', align: 'end',
+          labels: { boxWidth: 24, boxHeight: 2, padding: 20, color: 'rgba(255,255,255,0.55)', font: { size: 11 } }
+        },
+        tooltip: {
+          backgroundColor: '#1e2d20',
+          borderColor: 'rgba(117,160,117,0.3)',
+          borderWidth: 1,
+          titleColor: '#f0f7f0',
+          bodyColor: 'rgba(255,255,255,0.6)',
+          padding: 12,
+          callbacks: {
+            title: ctx => `Dia ${ctx[0].label} de Maio`,
+            label: ctx => {
+              const v = ctx.parsed.y;
+              if (v === null) return null;
+              return ` ${ctx.dataset.label}: R$ ${v.toLocaleString('pt-BR')}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: grid(),
+          ticks: {
+            color: 'rgba(255,255,255,0.35)',
+            font: { size: 10 },
+            callback: (val, i) => (i + 1) % 5 === 1 || i === 0 ? `${i+1}` : '',
+          },
+          title: { display: true, text: 'Dia do mês', color: 'rgba(255,255,255,0.3)', font: { size: 10 } }
+        },
+        y: {
+          grid: grid(),
+          ticks: {
+            color: 'rgba(255,255,255,0.35)',
+            font: { size: 10 },
+            callback: v => 'R$ ' + (v / 1000).toFixed(0) + 'k'
+          },
+          max: Math.ceil(META * 1.05 / 1000) * 1000,
+        }
+      }
+    }
+  });
+})();
+
+// ─── 2. RENOVAÇÕES DONUT ─────────────────────────────────────────────────
+(function() {
+  const ctx = document.getElementById('chartRenovacoes').getContext('2d');
+  const COLORS = { Renovado:'#75A075', Pendente:'#e8b84a', Baixa:'#d95f5f', Prorrogado:'#a8c9a8' };
+  const initLabels = ['Renovado','Pendente','Baixa'];
+  const initColors = initLabels.map(k => COLORS[k]);
+
+  chartRenovacoes = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: initLabels,
+      datasets: [{
+        data: [0, 0, 0],
+        backgroundColor: initColors.map(c => c + 'cc'),
+        borderColor: initColors,
+        borderWidth: 2,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      animation: { duration: 600 },
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            boxWidth: 10, padding: 14,
+            color: 'rgba(255,255,255,0.7)',
+            font: { size: 11 },
+            generateLabels: chart => {
+              const ds = chart.data.datasets[0];
+              const total = chart._total || 1;
+              return chart.data.labels.map((l, i) => ({
+                text: `${l}   ${ds.data[i]}   ${(ds.data[i]/total*100).toFixed(0)}%`,
+                fillStyle: ds.backgroundColor[i],
+                strokeStyle: ds.borderColor[i],
+                index: i,
+              }));
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1e2d20',
+          borderColor: 'rgba(117,160,117,0.3)',
+          borderWidth: 1,
+          titleColor: '#f0f7f0',
+          bodyColor: 'rgba(255,255,255,0.6)',
+          padding: 10,
+          callbacks: {
+            label: ctx => {
+              const total = ctx.chart._total || 1;
+              return ` ${ctx.label}: ${ctx.parsed} (${(ctx.parsed/total*100).toFixed(1)}%)`;
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'centerText',
+      afterDraw(chart) {
+        const { ctx: c, chartArea: { left, top, right, bottom } } = chart;
+        const cx = (left + right) / 2;
+        const cy = (top + bottom) / 2;
+        c.save();
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.font = '900 26px Inter, sans-serif';
+        c.fillStyle = '#75A075';
+        const taxa = STATE?.renovacoes?.taxa_renov ?? '—';
+        c.fillText(typeof taxa === 'number' ? taxa.toFixed(1) + '%' : taxa, cx, cy - 8);
+        c.font = '500 10px Inter, sans-serif';
+        c.fillStyle = 'rgba(255,255,255,0.4)';
+        c.fillText('renovação', cx, cy + 12);
+        c.restore();
+      }
+    }]
+  });
+  chartRenovacoes._total = 1;
+})();
+
+// ─── 3. VENDEDORES ───────────────────────────────────────────────────────
+function renderVendedores(list) {
+  const container = document.getElementById('vendList');
+  container.innerHTML = '';
+  const max = list[0]?.fat || 1;
+  const rankClass = ['rank-1','rank-2','rank-3','rank-n','rank-n','rank-n'];
+  list.forEach((v, i) => {
+    const pct = (v.fat / max * 100).toFixed(0);
+    const el = document.createElement('div');
+    el.className = 'vend-row';
+    el.innerHTML = `
+      <div class="vend-rank ${rankClass[i] || 'rank-n'}">${i+1}</div>
+      <div class="vend-name">${v.nome}</div>
+      <div class="vend-bar-wrap"><div class="vend-bar" style="width:${pct}%"></div></div>
+      <div class="vend-qty">${v.qtd}</div>
+      <div class="vend-fat">R$ ${(v.fat||0).toLocaleString('pt-BR')}</div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+// ─── 4. RENOVAÇÕES POR RESP ──────────────────────────────────────────────
+function renderRenovResp(list) {
+  const container = document.getElementById('renovStats');
+  container.innerHTML = '';
+  const totalRenov = list.reduce((s, r) => s + r.qtd, 0) || 1;
+  const max = list[0]?.qtd || 1;
+  list.forEach(r => {
+    const pct = (r.qtd / max * 100).toFixed(0);
+    const share = (r.qtd / totalRenov * 100).toFixed(0);
+    const el = document.createElement('div');
+    el.className = 'renov-row';
+    el.innerHTML = `
+      <div class="renov-dot" style="background:var(--green-light)"></div>
+      <div class="renov-name">${r.nome}</div>
+      <div class="renov-bar-wrap">
+        <div class="renov-bar" style="width:${pct}%;background:var(--green-light)"></div>
+      </div>
+      <div class="renov-count" style="color:var(--green-light)">${r.qtd}</div>
+      <div class="renov-pct">${share}%</div>
+    `;
+    container.appendChild(el);
+  });
+}
+</script>
+</body>
+</html>
