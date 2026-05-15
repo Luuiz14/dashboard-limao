@@ -1,6 +1,6 @@
 """Dashboard Limao - Servidor Cloud (Render.com)"""
 
-import io, json, os, sys, base64
+import io, json, os, re, sys, base64
 from datetime import datetime
 from collections import Counter, defaultdict
 
@@ -24,12 +24,55 @@ app = Flask(__name__, static_folder=".", static_url_path="")
 
 
 def baixar_planilha():
-    """Baixa a planilha do OneDrive e retorna um objeto BytesIO."""
+    """Baixa a planilha do OneDrive usando multiplas estrategias."""
+    UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    sess = requests.Session()
+    sess.headers.update({"User-Agent": UA})
+
     b64 = base64.urlsafe_b64encode(ONEDRIVE_SHARE_URL.encode()).rstrip(b"=").decode()
-    url = f"https://api.onedrive.com/v1.0/shares/u!{b64}/root/content"
-    resp = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
-    resp.raise_for_status()
-    return io.BytesIO(resp.content)
+    erros = []
+
+    # Estrategia 1: Microsoft Graph API (suporta "qualquer pessoa com o link")
+    try:
+        url = f"https://graph.microsoft.com/v1.0/shares/u!{b64}/driveItem/content"
+        r = sess.get(url, timeout=30, allow_redirects=True)
+        if r.ok and r.content[:4] == b"PK\x03\x04":
+            return io.BytesIO(r.content)
+        erros.append(f"Graph={r.status_code}")
+    except Exception as e:
+        erros.append(f"Graph_exc={e}")
+
+    # Estrategia 2: OneDrive Shares API legada
+    try:
+        url = f"https://api.onedrive.com/v1.0/shares/u!{b64}/root/content"
+        r = sess.get(url, timeout=30, allow_redirects=True)
+        if r.ok and r.content[:4] == b"PK\x03\x04":
+            return io.BytesIO(r.content)
+        erros.append(f"OD_API={r.status_code}")
+    except Exception as e:
+        erros.append(f"OD_API_exc={e}")
+
+    # Estrategia 3: Seguir o share link e extrair downloadUrl da pagina
+    try:
+        r = sess.get(ONEDRIVE_SHARE_URL, timeout=30, allow_redirects=True)
+        if r.ok and r.content[:4] == b"PK\x03\x04":
+            return io.BytesIO(r.content)
+        for pat in [
+            r'"downloadUrl"\s*:\s*"(https://[^"]+)"',
+            r'"downloadUrl"\s*:\s*"(https:\\/\\/[^"]+)"',
+            r'data-download-url="([^"]+)"',
+        ]:
+            m = re.search(pat, r.text)
+            if m:
+                dl = m.group(1).replace("\\/", "/").replace("\\u0026", "&")
+                r2 = sess.get(dl, timeout=30, allow_redirects=True)
+                if r2.ok:
+                    return io.BytesIO(r2.content)
+        erros.append(f"ShareLink={r.status_code} url={r.url[:80]}")
+    except Exception as e:
+        erros.append(f"ShareLink_exc={e}")
+
+    raise Exception("Falha ao baixar planilha: " + " | ".join(erros))
 
 
 def ler_planilha():
