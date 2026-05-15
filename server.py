@@ -4,13 +4,13 @@ import io, json, os, re, sys, base64
 from datetime import datetime
 from collections import Counter, defaultdict
 
-# ââ CONFIGURACAO ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ── CONFIGURACAO ──────────────────────────────────────────────────────────────
 # Link de compartilhamento do OneDrive (qualquer pessoa com o link pode visualizar)
 ONEDRIVE_SHARE_URL = "https://1drv.ms/x/c/e35c45354ce94f38/IQC1CiXP4Ai3TbEJ3GMvbdI7AX_ekay8pgXBZyB4InVfMLE?e=Erlyde"
 
 META_VENDAS = 29196
 PORT        = int(os.environ.get("PORT", 8050))
-# ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ──────────────────────────────────────────────────────────────────────────────
 
 try:
     from flask import Flask, jsonify, send_from_directory
@@ -126,8 +126,8 @@ def ler_planilha():
                 continue
             tipo = row[col.get("Venda", 2)]
             data = row[col.get("Dia que fechou", 3)]
-            val  = row[col.get("Valor medio", col.get("Valor mÃ©dio", 11))]
-            resp = row[col.get("Responsavel", col.get("ResponsÃ¡vel", 13))]
+            val  = row[col.get("Valor medio", col.get("Valor médio", 11))]
+            resp = row[col.get("Responsavel", col.get("Responsável", 13))]
             if isinstance(val, str):
                 val = None
             val = float(val) if val else 0.0
@@ -141,7 +141,7 @@ def ler_planilha():
             if isinstance(data, datetime):
                 daily[data.day] += val
 
-        total_fat  = sum(v["valor"] for v in vendas)
+        total_fat  = sum(v["valor"] for o in vendas)
         total_qtd  = len(vendas)
         ticket_med = round(total_fat / total_qtd) if total_qtd else 0
         tipos    = Counter(v["tipo"] for v in vendas if v["tipo"])
@@ -178,7 +178,11 @@ def ler_planilha():
 
     # RENOVACOES MAIO
     try:
-        ws = wb["RenovaÃ§Ãµes Maio"]
+        # Busca aba por palavra-chave (robusto a encoding de Unicode)
+        _sn = next((n for n in wb.sheetnames if "Renova" in n and "Maio" in n), None)
+        if not _sn:
+            raise KeyError(f"Aba Renovacoes nao encontrada. Sheets: {wb.sheetnames}")
+        ws = wb[_sn]
         rows = list(ws.iter_rows(values_only=True))
         header = rows[0]
         col = {str(h).strip(): i for i, h in enumerate(header) if h}
@@ -191,9 +195,13 @@ def ler_planilha():
             nome = row[1] if len(row) > 1 else None
             if not nome or str(nome).strip() in ("None", ""):
                 continue
-            sit_raw = row[col.get("SITUAÃÃO", 11)] if col.get("SITUAÃÃO") is not None else None
-            val     = row[col.get("VALOR MÃDIO ", col.get("VALOR MÃDIO", 9))]
-            resp    = row[col.get("RESPONSÃVEL", 12)]
+            # Busca colunas por palavras-chave ASCII (robusto a encoding)
+            sit_col  = next((i for k, i in col.items() if "SITU" in k.upper()), 11)
+            val_col  = next((i for k, i in col.items() if "VALOR" in k.upper() and "DIO" in k.upper()), 9)
+            resp_col = next((i for k, i in col.items() if "RESPON" in k.upper()), 12)
+            sit_raw = row[sit_col]  if len(row) > sit_col  else None
+            val     = row[val_col]  if len(row) > val_col  else None
+            resp    = row[resp_col] if len(row) > resp_col else None
             if not sit_raw:
                 continue
             sit = str(sit_raw).strip()
@@ -239,7 +247,7 @@ def ler_planilha():
             total += 1
             if str(row[col.get("AULA REALIZADA?",        7)]).strip() == "Sim": realiz  += 1
             if str(row[col.get("ATENDIMENTO REALIZADO?", 8)]).strip() == "Sim": atendim += 1
-            if str(row[col.get("CONVERSÃO",             11)]).strip() == "Sim": convers += 1
+            if str(row[col.get("CONVERSÃO",             11)]).strip() == "Sim": convers += 1
         resultado["aa"] = {
             "total":         total,
             "realizadas":    realiz,
