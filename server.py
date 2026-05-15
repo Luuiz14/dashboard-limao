@@ -141,7 +141,7 @@ def ler_planilha():
             if isinstance(data, datetime):
                 daily[data.day] += val
 
-        total_fat  = sum(v["valor"] for o in vendas)
+        total_fat  = sum(v["valor"] for v in vendas)
         total_qtd  = len(vendas)
         ticket_med = round(total_fat / total_qtd) if total_qtd else 0
         tipos    = Counter(v["tipo"] for v in vendas if v["tipo"])
