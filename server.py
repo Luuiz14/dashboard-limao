@@ -4,13 +4,13 @@ import io, json, os, re, sys, base64
 from datetime import datetime
 from collections import Counter, defaultdict
 
-# ── CONFIGURACAO ──────────────────────────────────────────────────────────────
+# ââ CONFIGURACAO ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 # Link de compartilhamento do OneDrive (qualquer pessoa com o link pode visualizar)
 ONEDRIVE_SHARE_URL = "https://1drv.ms/x/c/e35c45354ce94f38/IQC1CiXP4Ai3TbEJ3GMvbdI7AX_ekay8pgXBZyB4InVfMLE?e=Erlyde"
 
 META_VENDAS = 29196
 PORT        = int(os.environ.get("PORT", 8050))
-# ─────────────────────────────────────────────────────────────────────────────
+# ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 try:
     from flask import Flask, jsonify, send_from_directory
@@ -23,6 +23,12 @@ except ImportError:
 app = Flask(__name__, static_folder=".", static_url_path="")
 
 
+ONEDRIVE_RESID   = "E35C45354CE94F38!scf250ab508e04db7b109dc632f6dd23b"
+ONEDRIVE_CID     = "e35c45354ce94f38"
+ONEDRIVE_AUTHKEY = "!Erlyde"
+ONEDRIVE_PATH    = "Vendas%20e%20Renova%c3%a7%c3%b5es%20-%20Marginal.xlsx"
+
+
 def baixar_planilha():
     """Baixa a planilha do OneDrive usando multiplas estrategias."""
     UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
@@ -31,8 +37,33 @@ def baixar_planilha():
 
     b64 = base64.urlsafe_b64encode(ONEDRIVE_SHARE_URL.encode()).rstrip(b"=").decode()
     erros = []
+    html_trecho = ""
 
-    # Estrategia 1: Microsoft Graph API (suporta "qualquer pessoa com o link")
+    # Estrategia 1: Download via resid + authkey (formato SPO migrado)
+    try:
+        resid_enc = ONEDRIVE_RESID.replace("!", "%21")
+        auth_enc  = ONEDRIVE_AUTHKEY.replace("!", "%21")
+        url = f"https://onedrive.live.com/download?resid={resid_enc}&authkey={auth_enc}"
+        r = sess.get(url, timeout=30, allow_redirects=True)
+        if r.ok and r.content[:4] == b"PK\x03\x04":
+            return io.BytesIO(r.content)
+        erros.append(f"ResidDL={r.status_code} url={r.url[:60]}")
+    except Exception as e:
+        erros.append(f"ResidDL_exc={e}")
+
+    # Estrategia 2: Download via caminho do arquivo + authkey
+    try:
+        url = (f"https://onedrive.live.com/personal/{ONEDRIVE_CID}/"
+               f"Documents/Documentos/{ONEDRIVE_PATH}"
+               f"?ga=1&authkey={ONEDRIVE_AUTHKEY.replace('!', '%21')}")
+        r = sess.get(url, timeout=30, allow_redirects=True)
+        if r.ok and r.content[:4] == b"PK\x03\x04":
+            return io.BytesIO(r.content)
+        erros.append(f"PathDL={r.status_code}")
+    except Exception as e:
+        erros.append(f"PathDL_exc={e}")
+
+    # Estrategia 3: Microsoft Graph API
     try:
         url = f"https://graph.microsoft.com/v1.0/shares/u!{b64}/driveItem/content"
         r = sess.get(url, timeout=30, allow_redirects=True)
@@ -42,37 +73,31 @@ def baixar_planilha():
     except Exception as e:
         erros.append(f"Graph_exc={e}")
 
-    # Estrategia 2: OneDrive Shares API legada
-    try:
-        url = f"https://api.onedrive.com/v1.0/shares/u!{b64}/root/content"
-        r = sess.get(url, timeout=30, allow_redirects=True)
-        if r.ok and r.content[:4] == b"PK\x03\x04":
-            return io.BytesIO(r.content)
-        erros.append(f"OD_API={r.status_code}")
-    except Exception as e:
-        erros.append(f"OD_API_exc={e}")
-
-    # Estrategia 3: Seguir o share link e extrair downloadUrl da pagina
+    # Estrategia 4: Seguir share link e extrair URL do HTML da pagina
     try:
         r = sess.get(ONEDRIVE_SHARE_URL, timeout=30, allow_redirects=True)
         if r.ok and r.content[:4] == b"PK\x03\x04":
             return io.BytesIO(r.content)
+        html_trecho = r.text[:500].replace("\n", " ")
         for pat in [
-            r'"downloadUrl"\s*:\s*"(https://[^"]+)"',
-            r'"downloadUrl"\s*:\s*"(https:\\/\\/[^"]+)"',
+            r'"[Ff]ile[Gg]et[Uu]rl"\s*:\s*"(https://[^"]+)"',
+            r'"[Ff]ile[Gg]et[Uu]rl"\s*:\s*"(https:\\/\\/[^"]+)"',
+            r'"[Dd]ownload[Uu]rl"\s*:\s*"(https://[^"]+)"',
+            r'"[Dd]ownload[Uu]rl"\s*:\s*"(https:\\/\\/[^"]+)"',
             r'data-download-url="([^"]+)"',
+            r'"url"\s*:\s*"(https://[^"]+\.xlsx[^"]*)"',
         ]:
             m = re.search(pat, r.text)
             if m:
                 dl = m.group(1).replace("\\/", "/").replace("\\u0026", "&")
                 r2 = sess.get(dl, timeout=30, allow_redirects=True)
-                if r2.ok:
+                if r2.ok and r2.content[:4] == b"PK\x03\x04":
                     return io.BytesIO(r2.content)
-        erros.append(f"ShareLink={r.status_code} url={r.url[:80]}")
+        erros.append(f"HTML={r.status_code} url={r.url[:60]}")
     except Exception as e:
-        erros.append(f"ShareLink_exc={e}")
+        erros.append(f"HTML_exc={e}")
 
-    raise Exception("Falha ao baixar planilha: " + " | ".join(erros))
+    raise Exception("Falha: " + " | ".join(erros) + " || HTML=" + html_trecho)
 
 
 def ler_planilha():
@@ -101,8 +126,8 @@ def ler_planilha():
                 continue
             tipo = row[col.get("Venda", 2)]
             data = row[col.get("Dia que fechou", 3)]
-            val  = row[col.get("Valor medio", col.get("Valor médio", 11))]
-            resp = row[col.get("Responsavel", col.get("Responsável", 13))]
+            val  = row[col.get("Valor medio", col.get("Valor mÃ©dio", 11))]
+            resp = row[col.get("Responsavel", col.get("ResponsÃ¡vel", 13))]
             if isinstance(val, str):
                 val = None
             val = float(val) if val else 0.0
@@ -153,7 +178,7 @@ def ler_planilha():
 
     # RENOVACOES MAIO
     try:
-        ws = wb["Renovações Maio"]
+        ws = wb["RenovaÃ§Ãµes Maio"]
         rows = list(ws.iter_rows(values_only=True))
         header = rows[0]
         col = {str(h).strip(): i for i, h in enumerate(header) if h}
@@ -166,9 +191,9 @@ def ler_planilha():
             nome = row[1] if len(row) > 1 else None
             if not nome or str(nome).strip() in ("None", ""):
                 continue
-            sit_raw = row[col.get("SITUAÇÃO", 11)] if col.get("SITUAÇÃO") is not None else None
-            val     = row[col.get("VALOR MÉDIO ", col.get("VALOR MÉDIO", 9))]
-            resp    = row[col.get("RESPONSÁVEL", 12)]
+            sit_raw = row[col.get("SITUAÃÃO", 11)] if col.get("SITUAÃÃO") is not None else None
+            val     = row[col.get("VALOR MÃDIO ", col.get("VALOR MÃDIO", 9))]
+            resp    = row[col.get("RESPONSÃVEL", 12)]
             if not sit_raw:
                 continue
             sit = str(sit_raw).strip()
@@ -214,7 +239,7 @@ def ler_planilha():
             total += 1
             if str(row[col.get("AULA REALIZADA?",        7)]).strip() == "Sim": realiz  += 1
             if str(row[col.get("ATENDIMENTO REALIZADO?", 8)]).strip() == "Sim": atendim += 1
-            if str(row[col.get("CONVERSÃO",             11)]).strip() == "Sim": convers += 1
+            if str(row[col.get("CONVERSÃO",             11)]).strip() == "Sim": convers += 1
         resultado["aa"] = {
             "total":         total,
             "realizadas":    realiz,
