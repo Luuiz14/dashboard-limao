@@ -299,16 +299,11 @@ header {
 <!-- ══ SIDEBAR ══════════════════════════════════════════════════════════ -->
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 28 C8 28, 12 18, 20 14 C26 11, 30 15, 28 21 C26 27, 20 30, 14 28 C10 26.5, 8 28, 8 28Z"
-            stroke="#75A075" stroke-width="2" fill="none"/>
-      <circle cx="10" cy="27" r="2.5" fill="#75A075"/>
-      <line x1="10" y1="27" x2="5" y2="32" stroke="#75A075" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="22" cy="12" r="3" fill="none" stroke="#a8c9a8" stroke-width="1.5"/>
-      <line x1="20.8" y1="13.2" x2="23.2" y2="10.8" stroke="#a8c9a8" stroke-width="1" stroke-linecap="round"/>
-      <line x1="20.8" y1="10.8" x2="23.2" y2="13.2" stroke="#a8c9a8" stroke-width="1" stroke-linecap="round"/>
+    <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:110px;height:36px;flex-shrink:0">
+      <text x="2" y="28" font-family="'Inter',sans-serif" font-weight="900" font-size="22" letter-spacing="-0.5" fill="#75A075">LIMÃO</text>
+      <text x="64" y="20" font-family="'Inter',sans-serif" font-weight="600" font-size="8" letter-spacing="1" fill="#a8c9a8">TENNIS</text>
+      <text x="64" y="30" font-family="'Inter',sans-serif" font-weight="600" font-size="8" letter-spacing="1" fill="#a8c9a8">CLUB</text>
     </svg>
-    <span class="sidebar-logo-text">Lim<span>ā</span>o</span>
   </div>
 
   <div class="sidebar-nav">
@@ -326,13 +321,6 @@ header {
       </svg>
       Vendas
     </div>
-    <div class="sidebar-item" data-view="renovacoes">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-      </svg>
-      Renovações
-    </div>
     <div class="sidebar-item" data-view="aa">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -348,13 +336,13 @@ header {
   </div>
 </nav>
 
-<!-- ══ APP ═════════════════════════════════════════════════════════════ -->
+<!-- ══ APP ══════════════════════════════════════════════════════════════ -->
 <div class="app">
 
   <!-- HEADER compartilhado -->
   <header>
     <div class="brand-info">
-      <h1>Dashboard de Vendas &amp; Renovações</h1>
+      <h1>Dashboard de Vendas &amp; A.A.</h1>
       <p>Unidade Marginal · Maio 2026 · <span id="ultimaAtualiz">conectando…</span></p>
     </div>
     <div class="header-right">
@@ -370,7 +358,7 @@ header {
 
     <!-- ══ VISÃO GERAL ════════════════════════════════════════════════════ -->
     <div id="view-geral" class="view active">
-      <div class="kpis cols-5">
+      <div class="kpis cols-4">
         <div class="kpi accent-green">
           <div class="kpi-label">Faturamento Vendas</div>
           <div class="kpi-value" id="kpiFat">—</div>
@@ -387,12 +375,6 @@ header {
           <div class="kpi-value" id="kpiTicket">—</div>
           <div class="kpi-sub">Valor médio mensal por venda</div>
         </div>
-        <div class="kpi accent-green">
-          <div class="kpi-label">Taxa de Renovação</div>
-          <div class="kpi-value" id="kpiTaxaRenov">—</div>
-          <div class="kpi-sub" id="renovResumo">carregando…</div>
-          <div class="kpi-progress"><div class="kpi-progress-bar" id="progressRenov" style="width:0%"></div></div>
-        </div>
         <div class="kpi accent-yellow">
           <div class="kpi-label">Dias Restantes</div>
           <div class="kpi-value" id="diasRestantes">—</div>
@@ -407,13 +389,6 @@ header {
             <div class="card-title">Faturamento Acumulado vs. Meta — Maio 2026</div>
           </div>
           <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-label">Renovações</div>
-            <div class="card-title">Situação dos Contratos</div>
-          </div>
-          <div class="chart-wrap"><canvas id="chartRenovacoes"></canvas></div>
         </div>
         <div class="card">
           <div class="card-header">
@@ -446,13 +421,6 @@ header {
           </div>
           <div class="vend-list" id="vendList"></div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-label">Renovações por consultor</div>
-            <div class="card-title">Desempenho da Equipe</div>
-          </div>
-          <div class="renov-stats" id="renovStats"></div>
-        </div>
       </div>
     </div>
 
@@ -470,7 +438,7 @@ header {
           <div class="kpi-value" id="v-qtd">—</div>
           <div class="kpi-sub">Maio 2026 · mês em andamento</div>
         </div>
-        <div class="kpn accent-white">
+        <div class="kpi accent-white">
           <div class="kpi-label">Ticket Médio</div>
           <div class="kpi-value" id="v-ticket">—</div>
           <div class="kpi-sub">Valor médio por venda</div>
@@ -508,50 +476,6 @@ header {
             </div>
             <div class="tipos-grid" id="tiposGrid"></div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ RENOVAÇÕES ═════════════════════════════════════════════════════ -->
-    <div id="view-renovacoes" class="view">
-      <div class="kpis cols-4">
-        <div class="kpi accent-green">
-          <div class="kpi-label">Taxa de Renovação</div>
-          <div class="kpi-value" id="r-taxa">—</div>
-          <div class="kpi-sub" id="r-resumo">carregando…</div>
-          <div class="kpi-progress"><div class="kpi-progress-bar" id="r-progress" style="width:0%"></div></div>
-        </div>
-        <div class="kpi accent-pale">
-          <div class="kpi-label">Renovados</div>
-          <div class="kpi-value" id="r-renov">—</div>
-          <div class="kpi-sub" id="r-renovFat">—</div>
-        </div>
-        <div class="kpi accent-red">
-          <div class="kpi-label">Baixas</div>
-          <div class="kpi-value" id="r-baixa">—</div>
-          <div class="kpi-sub" id="r-baixaFat">—</div>
-        </div>
-        <div class="kpi accent-yellow">
-          <div class="kpi-label">Pendentes</div>
-          <div class="kpi-value" id="r-pend">—</div>
-          <div class="kpi-sub" id="r-pendFat">—</div>
-        </div>
-      </div>
-
-      <div class="renov-main">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-label">Renovações</div>
-            <div class="card-title">Situação dos Contratos</div>
-          </div>
-          <div class="chart-wrap"><canvas id="chartRenovacoes2"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-label">Por Consultor</div>
-            <div class="card-title">Desempenho da Equipe</div>
-          </div>
-          <div class="renov-stats" id="renovStats2"></div>
         </div>
       </div>
     </div>
@@ -601,10 +525,8 @@ header {
 <script>
 // ─── ESTADO GLOBAL ────────────────────────────────────────────────────────
 let STATE = null;
-let chartEvolucao    = null;
-let chartEvolucao2   = null;
-let chartRenovacoes  = null;
-let chartRenovacoes2 = null;
+let chartEvolucao  = null;
+let chartEvolucao2 = null;
 
 // ─── NAVEGAÇÃO LATERAL ────────────────────────────────────────────────────
 document.querySelectorAll('.sidebar-item').forEach(item => {
@@ -616,9 +538,8 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
     document.getElementById('view-' + viewId).classList.add('active');
     // Redimensiona charts ao tornar visível
     requestAnimationFrame(() => {
-      if (viewId === 'geral')       { chartEvolucao?.resize();  chartRenovacoes?.resize(); }
-      if (viewId === 'vendas')      { chartEvolucao2?.resize(); }
-      if (viewId === 'renovacoes')  { chartRenovacoes2?.resize(); }
+      if (viewId === 'geral')  { chartEvolucao?.resize(); }
+      if (viewId === 'vendas') { chartEvolucao2?.resize(); }
     });
   });
 });
@@ -669,24 +590,17 @@ setInterval(updateClock, 1000);
 // ─── RENDER GERAL ─────────────────────────────────────────────────────────
 function renderDashboard(d) {
   if (!d) return;
-  const v  = d.vendas     || {};
-  const r  = d.renovacoes || {};
-  const a  = d.aa         || {};
+  const v  = d.vendas || {};
+  const a  = d.aa     || {};
   const meta    = d.meta_total || META;
   const metaDia = d.meta_dia   || META_DIA;
-  const sits    = r.situacoes  || {};
-  const fat     = r.fat        || {};
 
   // ── KPIs geral
-  setText('kpiFat',       'R$ ' + fmt(v.total_fat));
-  setText('kpiPctMeta',   (v.pct_meta || 0).toFixed(1) + '% atingido');
-  setText('kpiQtd',       v.total_qtd || 0);
-  setText('kpiTicket',    'R$ ' + fmt(v.ticket_med));
-  setText('kpiTaxaRenov', (r.taxa_renov || 0).toFixed(1) + '%');
-  setWidth('progressFat',   Math.min(v.pct_meta || 0, 100));
-  setWidth('progressRenov', Math.min(r.taxa_renov || 0, 100));
-  setText('renovResumo',
-    `${sits.Renovado||0} renovados · ${sits.Baixa||0} baixas · ${sits.Pendente||0} pendentes`);
+  setText('kpiFat',     'R$ ' + fmt(v.total_fat));
+  setText('kpiPctMeta', (v.pct_meta || 0).toFixed(1) + '% atingido');
+  setText('kpiQtd',     v.total_qtd || 0);
+  setText('kpiTicket',  'R$ ' + fmt(v.ticket_med));
+  setWidth('progressFat', Math.min(v.pct_meta || 0, 100));
 
   // A.A. geral
   setText('aaTotal',    a.total      || 0);
@@ -704,14 +618,8 @@ function renderDashboard(d) {
     chartEvolucao.update('none');
   }
 
-  // Chart renovacoes geral
-  updateRenovChart(chartRenovacoes, sits);
-
   // Vendedores geral
   renderVendedoresTo('vendList', (v.vendedores||[]).slice(0,5));
-
-  // Renov por resp geral
-  renderRenovRespTo('renovStats', r.por_resp || []);
 
   // ── Aba VENDAS
   setText('v-fat',    'R$ ' + fmt(v.total_fat));
@@ -727,19 +635,6 @@ function renderDashboard(d) {
     chartEvolucao2.options.scales.y.max  = Math.ceil(meta * 1.05 / 1000) * 1000;
     chartEvolucao2.update('none');
   }
-
-  // ── Aba RENOVAÇÕES
-  setText('r-taxa',    (r.taxa_renov || 0).toFixed(1) + '%');
-  setText('r-resumo',  `${sits.Renovado||0} renovados · ${sits.Baixa||0} baixas`);
-  setWidth('r-progress', Math.min(r.taxa_renov || 0, 100));
-  setText('r-renov',    sits.Renovado || 0);
-  setText('r-renovFat', fat.Renovado ? 'R$ ' + fmt(fat.Renovado) : '—');
-  setText('r-baixa',    sits.Baixa   || 0);
-  setText('r-baixaFat', fat.Baixa    ? 'R$ ' + fmt(fat.Baixa)    : '—');
-  setText('r-pend',     sits.Pendente || 0);
-  setText('r-pendFat',  fat.Pendente  ? 'R$ ' + fmt(fat.Pendente) : '—');
-  updateRenovChart(chartRenovacoes2, sits);
-  renderRenovRespTo('renovStats2', r.por_resp || []);
 
   // ── Aba A.A.
   setText('aa-total',   a.total      || 0);
@@ -816,19 +711,6 @@ function renderTipos(tipos, vendedores) {
     `;
     container.appendChild(el);
   });
-}
-
-function updateRenovChart(chart, sits) {
-  if (!chart) return;
-  const order  = ['Renovado','Pendente','Baixa','Prorrogado'];
-  const colors = { Renovado:'#75A075', Pendente:'#e8b84a', Baixa:'#d95f5f', Prorrogado:'#a8c9a8' };
-  const labels = order.filter(k => sits[k] > 0);
-  chart.data.labels = labels;
-  chart.data.datasets[0].data            = labels.map(k => sits[k]);
-  chart.data.datasets[0].backgroundColor = labels.map(k => colors[k] + 'cc');
-  chart.data.datasets[0].borderColor     = labels.map(k => colors[k]);
-  chart._total = labels.reduce((s,k) => s + sits[k], 0);
-  chart.update('none');
 }
 
 // ─── CHART DEFAULTS ───────────────────────────────────────────────────────
@@ -908,85 +790,9 @@ function buildEvolucaoChart(canvasId) {
   });
 }
 
-function buildRenovChart(canvasId) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  const COLORS  = { Renovado:'#75A075', Pendente:'#e8b84a', Baixa:'#d95f5f', Prorrogado:'#a8c9a8' };
-  const initLabels = ['Renovado','Pendente','Baixa'];
-  const initColors = initLabels.map(k => COLORS[k]);
-  const chart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: initLabels,
-      datasets: [{
-        data: [0,0,0],
-        backgroundColor: initColors.map(c => c + 'cc'),
-        borderColor:     initColors,
-        borderWidth: 2, hoverOffset: 6,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '62%',
-      animation: { duration: 600 },
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            boxWidth: 10, padding: 14,
-            color: 'rgba(255,255,255,0.7)', font: { size: 11 },
-            generateLabels: chart => {
-              const ds    = chart.data.datasets[0];
-              const total = chart._total || 1;
-              return chart.data.labels.map((l,i) => ({
-                text: `${l}   ${ds.data[i]}   ${(ds.data[i]/total*100).toFixed(0)}%`,
-                fillStyle:   ds.backgroundColor[i],
-                strokeStyle: ds.borderColor[i],
-                index: i,
-              }));
-            }
-          }
-        },
-        tooltip: {
-          backgroundColor: '#1e2d20', borderColor: 'rgba(117,160,117,0.3)', borderWidth: 1,
-          titleColor: '#f0f7f0', bodyColor: 'rgba(255,255,255,0.6)', padding: 10,
-          callbacks: {
-            label: ctx => {
-              const total = ctx.chart._total || 1;
-              return ` ${ctx.label}: ${ctx.parsed} (${(ctx.parsed/total*100).toFixed(1)}%)`;
-            }
-          }
-        }
-      }
-    },
-    plugins: [{
-      id: 'centerText',
-      afterDraw(chart) {
-        const { ctx: c, chartArea: { left, top, right, bottom } } = chart;
-        const cx = (left + right) / 2;
-        const cy = (top + bottom) / 2;
-        c.save();
-        c.textAlign = 'center'; c.textBaseline = 'middle';
-        c.font = '900 26px Inter, sans-serif';
-        c.fillStyle = '#75A075';
-        const taxa = STATE?.renovacoes?.taxa_renov ?? '—';
-        c.fillText(typeof taxa === 'number' ? taxa.toFixed(1) + '%' : taxa, cx, cy - 8);
-        c.font = '500 10px Inter, sans-serif';
-        c.fillStyle = 'rgba(255,255,255,0.4)';
-        c.fillText('renovação', cx, cy + 12);
-        c.restore();
-      }
-    }]
-  });
-  chart._total = 1;
-  return chart;
-}
-
 // ─── INIT CHARTS ──────────────────────────────────────────────────────────
-chartEvolucao    = buildEvolucaoChart('chartEvolucao');
-chartEvolucao2   = buildEvolucaoChart('chartEvolucao2');
-chartRenovacoes  = buildRenovChart('chartRenovacoes');
-chartRenovacoes2 = buildRenovChart('chartRenovacoes2');
+chartEvolucao  = buildEvolucaoChart('chartEvolucao');
+chartEvolucao2 = buildEvolucaoChart('chartEvolucao2');
 </script>
 </body>
 </html>
- 
- 
