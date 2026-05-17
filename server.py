@@ -10,7 +10,7 @@ ONEDRIVE_SHARE_URL = "https://1drv.ms/x/c/e35c45354ce94f38/IQC1CiXP4Ai3TbEJ3GMvb
 
 META_VENDAS = 29196
 PORT        = int(os.environ.get("PORT", 8050))
-# ──────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
 try:
     from flask import Flask, jsonify, send_from_directory
@@ -131,12 +131,14 @@ def ler_planilha():
             if isinstance(val, str):
                 val = None
             val = float(val) if val else 0.0
+            modalidade = row[col.get("Modalidade", 6)]
             vendas.append({
-                "nome":  str(nome),
-                "tipo":  str(tipo).strip() if tipo else "",
-                "valor": val,
-                "resp":  str(resp).strip() if resp else "",
-                "dia":   data.day if isinstance(data, datetime) else None,
+                "nome":    str(nome),
+                "tipo":    str(tipo).strip() if tipo else "",
+                "produto": str(modalidade).strip() if modalidade else "",
+                "valor":   val,
+                "resp":    str(resp).strip() if resp else "",
+                "dia":     data.day if isinstance(data, datetime) else None,
             })
             if isinstance(data, datetime):
                 daily[data.day] += val
@@ -144,19 +146,22 @@ def ler_planilha():
         total_fat  = sum(v["valor"] for v in vendas)
         total_qtd  = len(vendas)
         ticket_med = round(total_fat / total_qtd) if total_qtd else 0
-        tipos    = Counter(v["tipo"] for v in vendas if v["tipo"])
-        resp_qtd = Counter(v["resp"] for v in vendas if v["resp"])
+        tipos    = Counter(v["tipo"]    for v in vendas if v["tipo"])
+        produtos = Counter(v["produto"] for v in vendas if v["produto"])
+        resp_qtd = Counter(v["resp"]    for v in vendas if v["resp"])
         resp_fat = defaultdict(float)
         for v in vendas:
             if v["resp"]:
                 resp_fat[v["resp"]] += v["valor"]
 
         hoje = datetime.today().day
-        acum = []
+        acum  = []
+        diario = []
         cum = 0.0
         for d in range(1, 32):
             cum += daily.get(d, 0)
             acum.append(round(cum) if (cum > 0 and d <= hoje) else None)
+            diario.append(round(daily[d]) if (d in daily and d <= hoje) else None)
 
         vendedores = sorted(
             [{"nome": k, "qtd": v, "fat": round(resp_fat[k])} for k, v in resp_qtd.items()],
@@ -170,7 +175,9 @@ def ler_planilha():
             "meta":       META_VENDAS,
             "pct_meta":   round(total_fat / META_VENDAS * 100, 1),
             "tipos":      dict(tipos),
+            "produtos":   dict(produtos),
             "acumulado":  acum,
+            "diario":     diario,
             "vendedores": vendedores,
         }
     except Exception as e:
@@ -259,25 +266,23 @@ def ler_planilha():
     except Exception as e:
         resultado["aa"] = {"erro": str(e)}
 
-    resultado["meta_dia"]   = round(META_VENDAS / 31, 2)
+    resultado["atualizado"] = datetime.now().strftime("%d/%m %H:%M")
     resultado["meta_total"] = META_VENDAS
-    resultado["atualizado"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    resultado["meta_dia"]   = META_VENDAS / 31
     return resultado
 
 
 @app.route("/api/data")
 def api_data():
-    dados = ler_planilha()
-    resp = jsonify(dados)
-    resp.headers["Cache-Control"] = "no-store"
-    return resp
-
+    return jsonify(ler_planilha())
 
 @app.route("/")
-def index():
+@app.route("/<path:path>")
+def serve(path=""):
+    if path and os.path.exists(path):
+        return send_from_directory(".", path)
     return send_from_directory(".", "dashboard_vendas.html")
 
 
 if __name__ == "__main__":
-    print("Rodando em http://localhost:" + str(PORT))
     app.run(host="0.0.0.0", port=PORT, debug=False)
