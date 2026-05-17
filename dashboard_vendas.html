@@ -55,11 +55,14 @@ body { display: flex; height: 100vh; }
   align-items: center;
   gap: 9px;
 }
-.sidebar-logo svg { width: 24px; height: 24px; flex-shrink: 0; }
-.sidebar-logo-text {
-  font-size: 18px; font-weight: 800; color: var(--white);
+.logo-limao {
+  font-size: 20px; font-weight: 900; color: var(--green-light);
+  letter-spacing: -0.5px; line-height: 1;
 }
-.sidebar-logo-text span { color: var(--green-pale); }
+.logo-sub {
+  font-size: 8px; font-weight: 700; color: var(--green-pale);
+  letter-spacing: 3px; margin-top: 3px; line-height: 1;
+}
 
 .sidebar-nav {
   display: flex; flex-direction: column;
@@ -248,6 +251,10 @@ header {
 .aa-mini-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 4px; }
 
 /* ── VENDAS VIEW ─────────────────────────── */
+.vendas-body {
+  display: flex; flex-direction: column;
+  gap: 10px; flex: 1; min-height: 0;
+}
 .vendas-main {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -266,6 +273,16 @@ header {
 .tipo-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green-dark), var(--green-pale)); }
 .tipo-count { font-size: 13px; font-weight: 800; color: var(--green-pale); min-width: 22px; text-align: right; }
 .tipo-fat { font-size: 10px; color: var(--muted); min-width: 62px; text-align: right; }
+
+/* produtos */
+.prod-grid { display: flex; flex-direction: column; gap: 7px; flex: 1; justify-content: space-around; }
+.prod-row { display: flex; align-items: center; gap: 9px; }
+.prod-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.prod-name { font-size: 11.5px; color: var(--text); flex: 1; font-weight: 500; }
+.prod-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.prod-bar { height: 100%; border-radius: 3px; }
+.prod-count { font-size: 12px; font-weight: 800; min-width: 24px; text-align: right; }
+.prod-pct { font-size: 10px; color: var(--muted); min-width: 32px; text-align: right; }
 
 /* ── RENOV VIEW ──────────────────────────── */
 .renov-main {
@@ -299,11 +316,10 @@ header {
 <!-- ══ SIDEBAR ══════════════════════════════════════════════════════════ -->
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:110px;height:36px;flex-shrink:0">
-      <text x="2" y="28" font-family="'Inter',sans-serif" font-weight="900" font-size="22" letter-spacing="-0.5" fill="#75A075">LIMÃO</text>
-      <text x="64" y="20" font-family="'Inter',sans-serif" font-weight="600" font-size="8" letter-spacing="1" fill="#a8c9a8">TENNIS</text>
-      <text x="64" y="30" font-family="'Inter',sans-serif" font-weight="600" font-size="8" letter-spacing="1" fill="#a8c9a8">CLUB</text>
-    </svg>
+    <div>
+      <div class="logo-limao">LIMÃO</div>
+      <div class="logo-sub">TENNIS CLUB</div>
+    </div>
   </div>
 
   <div class="sidebar-nav">
@@ -450,31 +466,49 @@ header {
         </div>
       </div>
 
-      <div class="vendas-main">
-        <!-- Gráfico acumulado grande -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-label">Evolução diária</div>
-            <div class="card-title">Faturamento Acumulado vs. Meta — Maio 2026</div>
+      <div class="vendas-body">
+        <!-- Gráfico diário (faturamento por dia) -->
+        <div class="card" style="flex-shrink:0;height:160px">
+          <div class="card-header" style="margin-bottom:6px">
+            <div class="card-label">Volume Diário</div>
+            <div class="card-title">Faturamento por Dia — Maio 2026</div>
           </div>
-          <div class="chart-wrap"><canvas id="chartEvolucao2"></canvas></div>
+          <div class="chart-wrap"><canvas id="chartDiario"></canvas></div>
         </div>
 
-        <!-- Coluna direita: ranking + tipos -->
-        <div class="vendas-right-col">
-          <div class="card" style="flex:1.5">
+        <div class="vendas-main">
+          <!-- Gráfico acumulado -->
+          <div class="card">
             <div class="card-header">
-              <div class="card-label">Ranking</div>
-              <div class="card-title">Top Vendedores — Maio</div>
+              <div class="card-label">Evolução Acumulada</div>
+              <div class="card-title">Faturamento Acumulado vs. Meta — Maio 2026</div>
             </div>
-            <div class="vend-list" id="vendList2"></div>
+            <div class="chart-wrap"><canvas id="chartEvolucao2"></canvas></div>
           </div>
-          <div class="card" style="flex:1">
-            <div class="card-header">
-              <div class="card-label">Por Tipo</div>
-              <div class="card-title">Breakdown de Vendas</div>
+
+          <!-- Coluna direita: ranking + tipo de venda + produto -->
+          <div class="vendas-right-col">
+            <div class="card" style="flex:1.4">
+              <div class="card-header">
+                <div class="card-label">Ranking</div>
+                <div class="card-title">Top Vendedores — Maio</div>
+              </div>
+              <div class="vend-list" id="vendList2"></div>
             </div>
-            <div class="tipos-grid" id="tiposGrid"></div>
+            <div class="card" style="flex:1">
+              <div class="card-header">
+                <div class="card-label">Tipo de Venda</div>
+                <div class="card-title">Nova, Retorno, Aumento</div>
+              </div>
+              <div class="tipos-grid" id="tiposGrid"></div>
+            </div>
+            <div class="card" style="flex:1">
+              <div class="card-header">
+                <div class="card-label">Por Produto</div>
+                <div class="card-title">Tênis, Liga, Limão+…</div>
+              </div>
+              <div class="prod-grid" id="prodGrid"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -527,6 +561,7 @@ header {
 let STATE = null;
 let chartEvolucao  = null;
 let chartEvolucao2 = null;
+let chartDiario    = null;
 
 // ─── NAVEGAÇÃO LATERAL ────────────────────────────────────────────────────
 document.querySelectorAll('.sidebar-item').forEach(item => {
@@ -539,7 +574,7 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
     // Redimensiona charts ao tornar visível
     requestAnimationFrame(() => {
       if (viewId === 'geral')  { chartEvolucao?.resize(); }
-      if (viewId === 'vendas') { chartEvolucao2?.resize(); }
+      if (viewId === 'vendas') { chartEvolucao2?.resize(); chartDiario?.resize(); }
     });
   });
 });
@@ -628,7 +663,12 @@ function renderDashboard(d) {
   setText('v-ticket', 'R$ ' + fmt(v.ticket_med));
   setWidth('v-progressFat', Math.min(v.pct_meta || 0, 100));
   renderVendedoresTo('vendList2', (v.vendedores||[]).slice(0,5));
-  renderTipos(v.tipos || {}, v.vendedores || []);
+  renderTipos(v.tipos || {});
+  renderProdutos(v.produtos || {});
+  if (chartDiario) {
+    chartDiario.data.datasets[0].data = v.diario || Array(31).fill(null);
+    chartDiario.update('none');
+  }
   if (chartEvolucao2) {
     chartEvolucao2.data.datasets[0].data = acum;
     chartEvolucao2.data.datasets[1].data = metaAcum;
@@ -693,7 +733,7 @@ function renderRenovRespTo(containerId, list) {
   });
 }
 
-function renderTipos(tipos, vendedores) {
+function renderTipos(tipos) {
   const container = document.getElementById('tiposGrid');
   if (!container) return;
   container.innerHTML = '';
@@ -708,6 +748,31 @@ function renderTipos(tipos, vendedores) {
       <div class="tipo-name">${tipo}</div>
       <div class="tipo-bar-wrap"><div class="tipo-bar" style="width:${pct}%"></div></div>
       <div class="tipo-count">${qtd}</div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function renderProdutos(produtos) {
+  const container = document.getElementById('prodGrid');
+  if (!container) return;
+  container.innerHTML = '';
+  const colors = ['#75A075','#a8c9a8','#e8b84a','#d95f5f','#4a6b4d','#f0c060','#8fcf8f'];
+  const entries = Object.entries(produtos).sort((a,b) => b[1]-a[1]);
+  const total = entries.reduce((s,[,v]) => s+v, 0) || 1;
+  const max = entries[0]?.[1] || 1;
+  entries.forEach(([prod, qtd], i) => {
+    const pct   = (qtd / max   * 100).toFixed(0);
+    const share = (qtd / total * 100).toFixed(0);
+    const color = colors[i % colors.length];
+    const el = document.createElement('div');
+    el.className = 'prod-row';
+    el.innerHTML = `
+      <div class="prod-dot" style="background:${color}"></div>
+      <div class="prod-name">${prod}</div>
+      <div class="prod-bar-wrap"><div class="prod-bar" style="width:${pct}%;background:${color}"></div></div>
+      <div class="prod-count" style="color:${color}">${qtd}</div>
+      <div class="prod-pct">${share}%</div>
     `;
     container.appendChild(el);
   });
@@ -790,9 +855,60 @@ function buildEvolucaoChart(canvasId) {
   });
 }
 
+// ─── INIT CHARTS ─────────────────────────────────────────────────────────
+chartEvolucao  = buildEvolucaoChart('chartEvolucao');
+function buildDiarioChart(canvasId) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  const dias = Array.from({length:31}, (_,i) => i+1);
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: dias,
+      datasets: [{
+        label: 'Fat. do Dia',
+        data: Array(31).fill(null),
+        backgroundColor: 'rgba(117,160,117,0.55)',
+        borderColor: '#75A075',
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      animation: { duration: 400 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e2d20', borderColor: 'rgba(117,160,117,0.3)', borderWidth: 1,
+          titleColor: '#f0f7f0', bodyColor: 'rgba(255,255,255,0.6)', padding: 10,
+          callbacks: {
+            title: ctx => `Dia ${ctx[0].label} de Maio`,
+            label: ctx => ctx.raw !== null && ctx.raw > 0
+              ? ` R$ ${ctx.raw.toLocaleString('pt-BR')}` : ' Sem vendas'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: gridStyle(),
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 },
+            callback: (val, i) => (i+1) % 5 === 1 || i === 0 ? `${i+1}` : '' }
+        },
+        y: {
+          grid: gridStyle(),
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 },
+            callback: v => 'R$ ' + (v/1000).toFixed(1) + 'k' }
+        }
+      }
+    }
+  });
+}
+
 // ─── INIT CHARTS ──────────────────────────────────────────────────────────
 chartEvolucao  = buildEvolucaoChart('chartEvolucao');
 chartEvolucao2 = buildEvolucaoChart('chartEvolucao2');
+chartDiario    = buildDiarioChart('chartDiario');
 </script>
 </body>
 </html>
