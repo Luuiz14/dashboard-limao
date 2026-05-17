@@ -85,7 +85,7 @@ body { display: flex; height: 100vh; }
   color: var(--green-light);
   border-left-color: var(--green-light);
 }
-.sidebar-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.7; }
+.sidebar-item svg { width: 15px; height: 15px; flex-shrink: opacity: 0.7; }
 .sidebar-item.active svg { opacity: 1; }
 
 .sidebar-footer {
@@ -230,17 +230,7 @@ header {
 .vend-qty { font-size: 12px; font-weight: 700; color: var(--green-light); min-width: 22px; text-align: right; }
 .vend-fat { font-size: 10px; color: var(--muted); min-width: 62px; text-align: right; }
 
-/* ── RENOV STATS ─────────────────────────── */
-.renov-stats { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: space-around; }
-.renov-row { display: flex; align-items: center; gap: 9px; }
-.renov-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.renov-name { font-size: 12px; color: var(--text); flex: 1; font-weight: 500; }
-.renov-bar-wrap { flex: 1.5; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
-.renov-bar { height: 100%; border-radius: 3px; }
-.renov-count { font-size: 13px; font-weight: 800; min-width: 28px; text-align: right; }
-.renov-pct   { font-size: 10px; color: var(--muted); min-width: 36px; text-align: right; }
-
-/* ── A.A. CARDS ──────────────────────────── */
+/* ── AA CARDS ──────────────────────────── */
 .aa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; flex: 1; }
 .aa-mini {
   background: var(--surface2); border: 1px solid var(--border);
@@ -249,6 +239,24 @@ header {
 }
 .aa-mini-val { font-size: 22px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
 .aa-mini-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 4px; }
+
+/* ── TIPOS DE VENDA ──────────────────────── */
+.tipos-grid { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: space-around; }
+.tipo-row { display: flex; align-items: center; gap: 9px; }
+.tipo-name { font-size: 12px; color: var(--text); flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tipo-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.tipo-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green-dark), var(--green-pale)); }
+.tipo-count { font-size: 13px; font-weight: 800; color: var(--green-pale); min-width: 24px; text-align: right; }
+
+/* ── PRODUTOS ────────────────────────────── */
+.prod-grid { display: flex; flex-direction: column; gap: 7px; flex: 1; justify-content: space-around; }
+.prod-row { display: flex; align-items: center; gap: 9px; }
+.prod-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.prod-name { font-size: 11.5px; color: var(--text); flex: 1; font-weight: 500; }
+.prod-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.prod-bar { height: 100%; border-radius: 3px; }
+.prod-count { font-size: 12px; font-weight: 800; min-width: 24px; text-align: right; }
+.prod-pct { font-size: 10px; color: var(--muted); min-width: 32px; text-align: right; }
 
 /* ── VENDAS VIEW ─────────────────────────── */
 .vendas-body {
@@ -263,32 +271,6 @@ header {
 .vendas-right-col {
   display: flex; flex-direction: column;
   gap: 10px; min-height: 0;
-}
-
-/* tipos de venda */
-.tipos-grid { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: space-around; }
-.tipo-row { display: flex; align-items: center; gap: 9px; }
-.tipo-name { font-size: 12px; color: var(--text); flex: 1; font-weight: 500; }
-.tipo-bar-wrap { flex: 1.2; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
-.tipo-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green-dark), var(--green-pale)); }
-.tipo-count { font-size: 13px; font-weight: 800; color: var(--green-pale); min-width: 22px; text-align: right; }
-.tipo-fat { font-size: 10px; color: var(--muted); min-width: 62px; text-align: right; }
-
-/* produtos */
-.prod-grid { display: flex; flex-direction: column; gap: 7px; flex: 1; justify-content: space-around; }
-.prod-row { display: flex; align-items: center; gap: 9px; }
-.prod-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.prod-name { font-size: 11.5px; color: var(--text); flex: 1; font-weight: 500; }
-.prod-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
-.prod-bar { height: 100%; border-radius: 3px; }
-.prod-count { font-size: 12px; font-weight: 800; min-width: 24px; text-align: right; }
-.prod-pct { font-size: 10px; color: var(--muted); min-width: 32px; text-align: right; }
-
-/* ── RENOV VIEW ──────────────────────────── */
-.renov-main {
-  display: grid;
-  grid-template-columns: 1.1fr 1.5fr;
-  gap: 10px; flex: 1; min-height: 0;
 }
 
 /* ── AA VIEW ─────────────────────────────── */
@@ -323,32 +305,31 @@ header {
   </div>
 
   <div class="sidebar-nav">
-    <div class="sidebar-item active" data-view="geral">
+    <div class="sidebar-item active" data-view="marginal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      Vendas Marginal
+    </div>
+    <div class="sidebar-item" data-view="limao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      Vendas Limão
+    </div>
+    <div class="sidebar-item" data-view="geral">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
         <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
       </svg>
       Visão Geral
     </div>
-    <div class="sidebar-item" data-view="vendas">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23"/>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-      Vendas
-    </div>
-    <div class="sidebar-item" data-view="aa">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-      A.A.
-    </div>
   </div>
 
   <div class="sidebar-footer">
-    Unidade Marginal<br>Maio 2026
+    Limão Tênis<br>Maio 2026
   </div>
 </nav>
 
@@ -358,8 +339,8 @@ header {
   <!-- HEADER compartilhado -->
   <header>
     <div class="brand-info">
-      <h1>Dashboard de Vendas &amp; A.A.</h1>
-      <p>Unidade Marginal · Maio 2026 · <span id="ultimaAtualiz">conectando…</span></p>
+      <h1>Dashboard de Vendas</h1>
+      <p>Limão Tênis · Maio 2026 · <span id="ultimaAtualiz">conectando…</span></p>
     </div>
     <div class="header-right">
       <div class="live-pill"><div class="live-dot"></div>AO VIVO</div>
@@ -373,7 +354,7 @@ header {
   <div class="views">
 
     <!-- ══ VISÃO GERAL ════════════════════════════════════════════════════ -->
-    <div id="view-geral" class="view active">
+    <div id="view-geral" class="view">
       <div class="kpis cols-4">
         <div class="kpi accent-green">
           <div class="kpi-label">Faturamento Vendas</div>
@@ -398,7 +379,9 @@ header {
         </div>
       </div>
 
+      <!-- Grid 3 colunas × 2 linhas -->
       <div class="main">
+        <!-- Gráfico acumulado: col 1, span 2 linhas -->
         <div class="card span2">
           <div class="card-header">
             <div class="card-label">Evolução diária</div>
@@ -406,6 +389,8 @@ header {
           </div>
           <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
         </div>
+
+        <!-- Col 2, linha 1: Funil A.A. -->
         <div class="card">
           <div class="card-header">
             <div class="card-label">Aulas Avaliativas · Maio</div>
@@ -430,6 +415,8 @@ header {
             </div>
           </div>
         </div>
+
+        <!-- Col 3, linha 1: Top Vendedores -->
         <div class="card">
           <div class="card-header">
             <div class="card-label">Ranking</div>
@@ -437,11 +424,29 @@ header {
           </div>
           <div class="vend-list" id="vendList"></div>
         </div>
+
+        <!-- Col 2, linha 2: Tipo de Venda (novo) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Distribuição</div>
+            <div class="card-title">Tipo de Venda</div>
+          </div>
+          <div class="tipos-grid" id="geralTiposGrid"></div>
+        </div>
+
+        <!-- Col 3, linha 2: Por Produto (novo) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Distribuição</div>
+            <div class="card-title">Por Produto</div>
+          </div>
+          <div class="prod-grid" id="geralProdGrid"></div>
+        </div>
       </div>
     </div>
 
-    <!-- ══ VENDAS ═════════════════════════════════════════════════════════ -->
-    <div id="view-vendas" class="view">
+    <!-- ══ VENDAS MARGINAL ══════════════════════════════════════════════════ -->
+    <div id="view-marginal" class="view active">
       <div class="kpis cols-4">
         <div class="kpi accent-green">
           <div class="kpi-label">Faturamento</div>
@@ -467,8 +472,28 @@ header {
       </div>
 
       <div class="vendas-body">
-        <!-- Gráfico diário (faturamento por dia) -->
-        <div class="card" style="flex-shrink:0;height:160px">
+        <!-- ── A.A. Marginal (compact strip) ─────────────────────────────── -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex-shrink:0">
+          <div class="kpi accent-white" style="padding:10px 14px">
+            <div class="kpi-label">A.A. Agendadas</div>
+            <div class="kpi-value" style="font-size:22px" id="m-aa-total">—</div>
+          </div>
+          <div class="kpi accent-green" style="padding:10px 14px">
+            <div class="kpi-label">A.A. Realizadas</div>
+            <div class="kpi-value" style="font-size:22px" id="m-aa-realiz">—</div>
+          </div>
+          <div class="kpi accent-pale" style="padding:10px 14px">
+            <div class="kpi-label">Taxa Presença</div>
+            <div class="kpi-value" style="font-size:22px" id="m-aa-presenca">—</div>
+          </div>
+          <div class="kpi accent-yellow" style="padding:10px 14px">
+            <div class="kpi-label">Conversões A.A.</div>
+            <div class="kpi-value" style="font-size:22px" id="m-aa-conv">—</div>
+          </div>
+        </div>
+
+        <!-- Gráfico diário -->
+        <div class="card" style="flex-shrink:0;height:140px">
           <div class="card-header" style="margin-bottom:6px">
             <div class="card-label">Volume Diário</div>
             <div class="card-title">Faturamento por Dia — Maio 2026</div>
@@ -486,7 +511,7 @@ header {
             <div class="chart-wrap"><canvas id="chartEvolucao2"></canvas></div>
           </div>
 
-          <!-- Coluna direita: ranking + tipo de venda + produto -->
+          <!-- Coluna direita -->
           <div class="vendas-right-col">
             <div class="card" style="flex:1.4">
               <div class="card-header">
@@ -497,15 +522,15 @@ header {
             </div>
             <div class="card" style="flex:1">
               <div class="card-header">
-                <div class="card-label">Tipo de Venda</div>
-                <div class="card-title">Nova, Retorno, Aumento</div>
+                <div class="card-label">Distribuição</div>
+                <div class="card-title">Tipo de Venda</div>
               </div>
               <div class="tipos-grid" id="tiposGrid"></div>
             </div>
             <div class="card" style="flex:1">
               <div class="card-header">
-                <div class="card-label">Por Produto</div>
-                <div class="card-title">Tênis, Liga, Limão+…</div>
+                <div class="card-label">Distribuição</div>
+                <div class="card-title">Por Produto</div>
               </div>
               <div class="prod-grid" id="prodGrid"></div>
             </div>
@@ -514,40 +539,96 @@ header {
       </div>
     </div>
 
-    <!-- ══ A.A. ═══════════════════════════════════════════════════════════ -->
-    <div id="view-aa" class="view">
+    <!-- ══ VENDAS LIMÃO ════════════════════════════════════════════════════ -->
+    <div id="view-limao" class="view">
       <div class="kpis cols-4">
-        <div class="kpi accent-white">
-          <div class="kpi-label">Agendadas</div>
-          <div class="kpi-value" id="aa-total">—</div>
-          <div class="kpi-sub">Total de A.A. no mês</div>
-        </div>
         <div class="kpi accent-green">
-          <div class="kpi-label">Realizadas</div>
-          <div class="kpi-value" id="aa-realiz">—</div>
-          <div class="kpi-sub" id="aa-realizSub">—</div>
-          <div class="kpi-progress"><div class="kpi-progress-bar" id="aa-progressPresenca" style="width:0%"></div></div>
+          <div class="kpi-label">Faturamento</div>
+          <div class="kpi-value" id="l-fat">—</div>
+          <div class="kpi-sub">Meta R$ 29.196 &nbsp;·&nbsp; <strong style="color:var(--green-light)" id="l-pct">carregando…</strong></div>
+          <div class="kpi-progress"><div class="kpi-progress-bar" id="l-progressFat" style="width:0%"></div></div>
         </div>
         <div class="kpi accent-pale">
-          <div class="kpi-label">Taxa de Presença</div>
-          <div class="kpi-value" id="aa-presenca">—</div>
-          <div class="kpi-sub">Realizadas / agendadas</div>
+          <div class="kpi-label">Total de Vendas</div>
+          <div class="kpi-value" id="l-qtd">—</div>
+          <div class="kpi-sub">Maio 2026 · mês em andamento</div>
+        </div>
+        <div class="kpi accent-white">
+          <div class="kpi-label">Ticket Médio</div>
+          <div class="kpi-value" id="l-ticket">—</div>
+          <div class="kpi-sub">Valor médio por venda</div>
         </div>
         <div class="kpi accent-yellow">
-          <div class="kpi-label">Conversões</div>
-          <div class="kpi-value" id="aa-conv">—</div>
-          <div class="kpi-sub" id="aa-convSub">—</div>
+          <div class="kpi-label">Dias Restantes</div>
+          <div class="kpi-value" id="l-dias">—</div>
+          <div class="kpi-sub">Dia <span id="l-diaAtual">--</span> de 31 · Maio 2026</div>
         </div>
       </div>
 
-      <div class="aa-view-main">
-        <div class="card aa-center-card">
-          <div class="aa-big-val" style="color:var(--green-light)" id="aa-big-presenca">—</div>
-          <div class="aa-big-lbl">Taxa de Presença</div>
+      <div class="vendas-body">
+        <!-- A.A. Limão compact strip -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex-shrink:0">
+          <div class="kpi accent-white" style="padding:10px 14px">
+            <div class="kpi-label">A.A. Agendadas</div>
+            <div class="kpi-value" style="font-size:22px" id="l-aa-total">—</div>
+          </div>
+          <div class="kpi accent-green" style="padding:10px 14px">
+            <div class="kpi-label">A.A. Realizadas</div>
+            <div class="kpi-value" style="font-size:22px" id="l-aa-realiz">—</div>
+          </div>
+          <div class="kpi accent-pale" style="padding:10px 14px">
+            <div class="kpi-label">Taxa Presença</div>
+            <div class="kpi-value" style="font-size:22px" id="l-aa-presenca">—</div>
+          </div>
+          <div class="kpi accent-yellow" style="padding:10px 14px">
+            <div class="kpi-label">Conversões A.A.</div>
+            <div class="kpi-value" style="font-size:22px" id="l-aa-conv">—</div>
+          </div>
         </div>
-        <div class="card aa-center-card">
-          <div class="aa-big-val" style="color:var(--yellow)" id="aa-big-conv">—</div>
-          <div class="aa-big-lbl">Taxa de Conversão</div>
+
+        <!-- Gráfico diário Limão -->
+        <div class="card" style="flex-shrink:0;height:140px">
+          <div class="card-header" style="margin-bottom:6px">
+            <div class="card-label">Volume Diário</div>
+            <div class="card-title">Faturamento por Dia — Limão · Maio 2026</div>
+          </div>
+          <div class="chart-wrap"><canvas id="chartDiario2"></canvas></div>
+        </div>
+
+        <div class="vendas-main">
+          <!-- Gráfico acumulado Limão -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-label">Evolução Acumulada</div>
+              <div class="card-title">Faturamento Acumulado vs. Meta — Limão · Maio 2026</div>
+            </div>
+            <div class="chart-wrap"><canvas id="chartEvolucao3"></canvas></div>
+          </div>
+
+          <!-- Coluna direita Limão -->
+          <div class="vendas-right-col">
+            <div class="card" style="flex:1.4">
+              <div class="card-header">
+                <div class="card-label">Ranking</div>
+                <div class="card-title">Top Vendedores — Limão · Maio</div>
+              </div>
+              <div class="vend-list" id="l-vendList"></div>
+            </div>
+            <div class="card" style="flex:1">
+              <div class="card-header">
+                <div class="card-label">Distribuição</div>
+                <div class="card-title">Tipo de Venda</div>
+              </div>
+              <div class="tipos-grid" id="l-tiposGrid"></div>
+            </div>
+            <div class="card" style="flex:1">
+              <div class="card-header">
+                <div class="card-label">Distribuição</div>
+                <div class="card-title">Por Produto</div>
+              </div>
+              <div class="prod-grid" id="l-prodGrid"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -561,7 +642,9 @@ header {
 let STATE = null;
 let chartEvolucao  = null;
 let chartEvolucao2 = null;
+let chartEvolucao3 = null;
 let chartDiario    = null;
+let chartDiario2   = null;
 
 // ─── NAVEGAÇÃO LATERAL ────────────────────────────────────────────────────
 document.querySelectorAll('.sidebar-item').forEach(item => {
@@ -571,10 +654,10 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
     item.classList.add('active');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + viewId).classList.add('active');
-    // Redimensiona charts ao tornar visível
     requestAnimationFrame(() => {
-      if (viewId === 'geral')  { chartEvolucao?.resize(); }
-      if (viewId === 'vendas') { chartEvolucao2?.resize(); chartDiario?.resize(); }
+      if (viewId === 'geral')    { chartEvolucao?.resize(); }
+      if (viewId === 'marginal') { chartEvolucao2?.resize(); chartDiario?.resize(); }
+      if (viewId === 'limao')    { chartEvolucao3?.resize(); chartDiario2?.resize(); }
     });
   });
 });
@@ -622,15 +705,15 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ─── RENDER GERAL ─────────────────────────────────────────────────────────
+// ─── RENDER DASHBOARD ─────────────────────────────────────────────────────
 function renderDashboard(d) {
   if (!d) return;
-  const v  = d.vendas || {};
-  const a  = d.aa     || {};
+  const v       = d.vendas || {};
+  const a       = d.aa     || {};
   const meta    = d.meta_total || META;
   const metaDia = d.meta_dia   || META_DIA;
 
-  // ── KPIs geral
+  // KPIs geral
   setText('kpiFat',     'R$ ' + fmt(v.total_fat));
   setText('kpiPctMeta', (v.pct_meta || 0).toFixed(1) + '% atingido');
   setText('kpiQtd',     v.total_qtd || 0);
@@ -643,8 +726,8 @@ function renderDashboard(d) {
   setText('aaPresenca', (a.taxa_presenca || 0).toFixed(0) + '%');
   setText('aaConv',     a.conversoes || 0);
 
-  // Chart evolucao geral
-  const acum    = v.acumulado || [];
+  // Chart geral
+  const acum     = v.acumulado || [];
   const metaAcum = Array.from({length:31}, (_,i) => Math.round(metaDia*(i+1)));
   if (chartEvolucao) {
     chartEvolucao.data.datasets[0].data = acum;
@@ -656,15 +739,23 @@ function renderDashboard(d) {
   // Vendedores geral
   renderVendedoresTo('vendList', (v.vendedores||[]).slice(0,5));
 
-  // ── Aba VENDAS
+  // Tipos e Produtos — Visão Geral
+  renderTiposTo('geralTiposGrid', v.tipos    || {});
+  renderProdutosTo('geralProdGrid', v.produtos || {});
+
+  // KPIs Vendas
   setText('v-fat',    'R$ ' + fmt(v.total_fat));
   setText('v-pct',    (v.pct_meta || 0).toFixed(1) + '% atingido');
   setText('v-qtd',    v.total_qtd || 0);
   setText('v-ticket', 'R$ ' + fmt(v.ticket_med));
   setWidth('v-progressFat', Math.min(v.pct_meta || 0, 100));
+
   renderVendedoresTo('vendList2', (v.vendedores||[]).slice(0,5));
-  renderTipos(v.tipos || {});
-  renderProdutos(v.produtos || {});
+
+  // Tipos e Produtos — Vendas
+  renderTiposTo('tiposGrid',    v.tipos    || {});
+  renderProdutosTo('prodGrid',  v.produtos || {});
+
   if (chartDiario) {
     chartDiario.data.datasets[0].data = v.diario || Array(31).fill(null);
     chartDiario.update('none');
@@ -676,20 +767,59 @@ function renderDashboard(d) {
     chartEvolucao2.update('none');
   }
 
-  // ── Aba A.A.
-  setText('aa-total',   a.total      || 0);
-  setText('aa-realiz',  a.realizadas || 0);
-  setText('aa-realizSub', (a.taxa_presenca || 0).toFixed(1) + '% de presença');
-  setWidth('aa-progressPresenca', Math.min(a.taxa_presenca || 0, 100));
-  setText('aa-presenca', (a.taxa_presenca || 0).toFixed(0) + '%');
-  const taxaConv = a.realizadas ? (a.conversoes / a.realizadas * 100).toFixed(1) : 0;
-  setText('aa-conv',     a.conversoes || 0);
-  setText('aa-convSub',  taxaConv + '% de conv. / realizadas');
-  setText('aa-big-presenca', (a.taxa_presenca || 0).toFixed(0) + '%');
-  setText('aa-big-conv',     taxaConv + '%');
+  // A.A. Marginal strip
+  setText('m-aa-total',    a.total      || 0);
+  setText('m-aa-realiz',   a.realizadas || 0);
+  setText('m-aa-presenca', (a.taxa_presenca || 0).toFixed(0) + '%');
+  setText('m-aa-conv',     a.conversoes || 0);
+
+  // Limão unit data
+  const lv = d.limao?.vendas || {};
+  const la = d.limao?.aa     || {};
+  const lMeta = d.limao?.meta_total || META;
+  const lMetaDia = d.limao?.meta_dia || META_DIA;
+
+  // KPIs Limão
+  setText('l-fat',    'R$ ' + fmt(lv.total_fat));
+  setText('l-pct',    (lv.pct_meta || 0).toFixed(1) + '% atingido');
+  setText('l-qtd',    lv.total_qtd || '—');
+  setText('l-ticket', lv.total_fat && lv.total_qtd ? 'R$ ' + fmt(Math.round(lv.total_fat / lv.total_qtd)) : '—');
+  setWidth('l-progressFat', Math.min(lv.pct_meta || 0, 100));
+  const nowL = new Date();
+  const lastDayL = new Date(nowL.getFullYear(), nowL.getMonth()+1, 0).getDate();
+  const restL = lastDayL - nowL.getDate();
+  setText('l-dias',    restL + (restL === 1 ? ' dia' : ' dias'));
+  setText('l-diaAtual', nowL.getDate());
+
+  // A.A. Limão strip
+  setText('l-aa-total',    la.total      || '—');
+  setText('l-aa-realiz',   la.realizadas || '—');
+  setText('l-aa-presenca', la.taxa_presenca !== undefined ? (la.taxa_presenca || 0).toFixed(0) + '%' : '—');
+  setText('l-aa-conv',     la.conversoes || '—');
+
+  // Vendedores Limão
+  renderVendedoresTo('l-vendList', (lv.vendedores||[]).slice(0,5));
+
+  // Tipos e Produtos Limão
+  renderTiposTo('l-tiposGrid',   lv.tipos    || {});
+  renderProdutosTo('l-prodGrid', lv.produtos || {});
+
+  // Charts Limão
+  const lAcum    = lv.acumulado || [];
+  const lMetaAcum = Array.from({length:31}, (_,i) => Math.round(lMetaDia*(i+1)));
+  if (chartDiario2) {
+    chartDiario2.data.datasets[0].data = lv.diario || Array(31).fill(null);
+    chartDiario2.update('none');
+  }
+  if (chartEvolucao3) {
+    chartEvolucao3.data.datasets[0].data = lAcum;
+    chartEvolucao3.data.datasets[1].data = lMetaAcum;
+    chartEvolucao3.options.scales.y.max  = Math.ceil(lMeta * 1.05 / 1000) * 1000;
+    chartEvolucao3.update('none');
+  }
 }
 
-// ─── HELPERS DE RENDER ────────────────────────────────────────────────────
+// ─── RENDER HELPERS ───────────────────────────────────────────────────────
 function renderVendedoresTo(containerId, list) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -711,35 +841,12 @@ function renderVendedoresTo(containerId, list) {
   });
 }
 
-function renderRenovRespTo(containerId, list) {
+function renderTiposTo(containerId, tipos) {
   const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-  const total = list.reduce((s,r) => s + r.qtd, 0) || 1;
-  const max   = list[0]?.qtd || 1;
-  list.forEach(r => {
-    const pct   = (r.qtd / max   * 100).toFixed(0);
-    const share = (r.qtd / total * 100).toFixed(0);
-    const el = document.createElement('div');
-    el.className = 'renov-row';
-    el.innerHTML = `
-      <div class="renov-dot" style="background:var(--green-light)"></div>
-      <div class="renov-name">${r.nome}</div>
-      <div class="renov-bar-wrap"><div class="renov-bar" style="width:${pct}%;background:var(--green-light)"></div></div>
-      <div class="renov-count" style="color:var(--green-light)">${r.qtd}</div>
-      <div class="renov-pct">${share}%</div>
-    `;
-    container.appendChild(el);
-  });
-}
-
-function renderTipos(tipos) {
-  const container = document.getElementById('tiposGrid');
   if (!container) return;
   container.innerHTML = '';
   const entries = Object.entries(tipos).sort((a,b) => b[1]-a[1]);
   const maxQtd  = entries[0]?.[1] || 1;
-  // Calcula faturamento por tipo a partir dos vendedores... só temos qtd por tipo
   entries.forEach(([tipo, qtd]) => {
     const pct = (qtd / maxQtd * 100).toFixed(0);
     const el  = document.createElement('div');
@@ -753,14 +860,14 @@ function renderTipos(tipos) {
   });
 }
 
-function renderProdutos(produtos) {
-  const container = document.getElementById('prodGrid');
+function renderProdutosTo(containerId, produtos) {
+  const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
   const colors = ['#75A075','#a8c9a8','#e8b84a','#d95f5f','#4a6b4d','#f0c060','#8fcf8f'];
   const entries = Object.entries(produtos).sort((a,b) => b[1]-a[1]);
   const total = entries.reduce((s,[,v]) => s+v, 0) || 1;
-  const max = entries[0]?.[1] || 1;
+  const max   = entries[0]?.[1] || 1;
   entries.forEach(([prod, qtd], i) => {
     const pct   = (qtd / max   * 100).toFixed(0);
     const share = (qtd / total * 100).toFixed(0);
@@ -779,7 +886,7 @@ function renderProdutos(produtos) {
 }
 
 // ─── CHART DEFAULTS ───────────────────────────────────────────────────────
-Chart.defaults.color      = 'rgba(255,255,255,0.45)';
+Chart.defaults.color       = 'rgba(255,255,255,0.45)';
 Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
 Chart.defaults.font.size   = 11;
 const gridStyle = () => ({ color: 'rgba(117,160,117,0.1)', drawBorder: false });
@@ -801,7 +908,7 @@ function buildEvolucaoChart(canvasId) {
           borderColor: '#75A075', backgroundColor: grad,
           borderWidth: 2.5,
           pointBackgroundColor: '#75A075',
-          pointRadius: ctx => ctx.raw !== null ? 4 : 0,
+          pointRadius: 3,
           pointHoverRadius: 7,
           tension: 0.35, fill: true, spanGaps: false,
         },
@@ -855,8 +962,6 @@ function buildEvolucaoChart(canvasId) {
   });
 }
 
-// ─── INIT CHARTS ─────────────────────────────────────────────────────────
-chartEvolucao  = buildEvolucaoChart('chartEvolucao');
 function buildDiarioChart(canvasId) {
   const ctx = document.getElementById(canvasId).getContext('2d');
   const dias = Array.from({length:31}, (_,i) => i+1);
@@ -905,10 +1010,12 @@ function buildDiarioChart(canvasId) {
   });
 }
 
-// ─── INIT CHARTS ──────────────────────────────────────────────────────────
+// ─── INIT CHARTS (uma única vez cada) ────────────────────────────────────
 chartEvolucao  = buildEvolucaoChart('chartEvolucao');
 chartEvolucao2 = buildEvolucaoChart('chartEvolucao2');
+chartEvolucao3 = buildEvolucaoChart('chartEvolucao3');
 chartDiario    = buildDiarioChart('chartDiario');
+chartDiario2   = buildDiarioChart('chartDiario2');
 </script>
 </body>
 </html>
